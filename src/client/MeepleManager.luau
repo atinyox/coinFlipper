@@ -12,7 +12,7 @@ local TweenService        = game:GetService("TweenService")
 local ReplicatedStorage   = game:GetService("ReplicatedStorage")
 
 local Shared      = ReplicatedStorage:WaitForChild("Shared")
-local Config      = require(Shared.Config)
+local Config      = require(Shared.ConfigBase)
 
 local _noobDummyTemplate: Model? = ReplicatedStorage:FindFirstChild("Noob") :: Model?
 

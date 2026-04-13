@@ -18,7 +18,7 @@ local Players    = game:GetService("Players")
 local Client  = script
 local Shared  = game:GetService("ReplicatedStorage"):WaitForChild("Shared")
 
-local Config       = require(Shared.Config)
+local Config       = require(Shared.ConfigBase)
 local Remotes      = require(Shared.Remotes)
 local PlayerState  = require(Client.PlayerState)
 local CoinRenderer = require(Client.CoinRenderer)
@@ -94,7 +94,7 @@ HUD.init(PlayerState)
 
 -- Re-apply any upgrades that were loaded from save data
 -- (ShopManager applies effects on purchase; on load we replay them)
-local UpgradeDefs = require(Shared.UpgradeDefinitions)
+local UpgradeDefs = require(Shared.ConfigUpgrades)
 for _, id in UpgradeDefs.order do
 	local level = PlayerState.getUpgradeLevel(id)
 	for _ = 1, level do

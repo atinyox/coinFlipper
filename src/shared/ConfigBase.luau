@@ -15,11 +15,11 @@ Config.FLIP_WIN_CHANCE    = 0.5     -- base probability of heads (0–1)
 Config.BASE_PAYOUT        = 1      -- money earned per successful flip
 
 -- Meeple
-Config.MEEPLE_COUNT       = 2       -- default meeple before server friend data loads
+Config.MEEPLE_COUNT       = 1       -- default meeple before server friend data loads
 Config.MEEPLE_SPEED       = 10      -- studs per second movement speed
 Config.MEEPLE_MAX_ENERGY  = 10      -- number of flips before a meeple tires
 Config.MEEPLE_REST_DURATION = 10    -- seconds before a tired meeple wakes automatically
-Config.MEEPLE_FLIP_PAUSE    = 1.5  -- seconds a meeple idles after flipping before seeking the next coin
+Config.MEEPLE_FLIP_PAUSE    = 3  -- seconds a meeple idles after flipping before seeking the next coin
 
 -- Coin flip animation (shared by CoinRenderer and MeepleManager)
 Config.FLIP_DURATION      = 0.9    -- seconds for the full coin arc animation

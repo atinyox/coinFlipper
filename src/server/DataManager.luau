@@ -10,7 +10,7 @@ local DataStoreService = game:GetService("DataStoreService")
 
 local Shared   = game:GetService("ReplicatedStorage"):WaitForChild("Shared")
 local Remotes  = require(Shared.Remotes)
-local Config   = require(Shared.Config)
+local Config   = require(Shared.ConfigBase)
 
 local DataManager = {}
 

@@ -8,7 +8,7 @@ local TweenService = game:GetService("TweenService")
 local RunService   = game:GetService("RunService")
 
 local Shared       = game:GetService("ReplicatedStorage"):WaitForChild("Shared")
-local Config       = require(Shared.Config)
+local Config       = require(Shared.ConfigBase)
 
 local CoinManager = {}
 

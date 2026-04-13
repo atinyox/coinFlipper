@@ -5,7 +5,7 @@
 local Players     = game:GetService("Players")
 
 local Shared      = game:GetService("ReplicatedStorage"):WaitForChild("Shared")
-local UpgradeDefs = require(Shared.UpgradeDefinitions)
+local UpgradeDefs = require(Shared.ConfigUpgrades)
 
 local ShopUI = {}
 
@@ -135,7 +135,7 @@ local function _buildSidebar()
 		btnCorner.Parent = btn
 
 		-- Level indicator
-		local levelLbl = _makeLabel(card, "Lv 0/" .. def.maxLevel,
+		local levelLbl = _makeLabel(card, "Lv 0/" .. #def,
 			UDim2.new(0, 80, 0, 18),
 			UDim2.new(0, 8, 0, CARD_HEIGHT - 26),
 			11, COLOR_DIMTEXT, false)
@@ -158,9 +158,9 @@ local function _refresh()
 		local cost  = _ShopManager.getCost(id)
 		local money = _PlayerState.getMoney()
 
-		card.levelLabel.Text = "Lv " .. level .. "/" .. def.maxLevel
+		card.levelLabel.Text = "Lv " .. level .. "/" .. #def
 
-		if level >= def.maxLevel then
+		if level >= #def then
 			card.button.Text             = "MAX"
 			card.button.BackgroundColor3 = COLOR_MAXED
 			card.button.Active           = false

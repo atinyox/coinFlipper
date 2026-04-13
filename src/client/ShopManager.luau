@@ -3,8 +3,8 @@
 -- applies upgrade effects to Config + live managers, then triggers a save.
 
 local Shared           = game:GetService("ReplicatedStorage"):WaitForChild("Shared")
-local Config           = require(Shared.Config)
-local UpgradeDefs      = require(Shared.UpgradeDefinitions)
+local Config           = require(Shared.ConfigBase)
+local UpgradeDefs      = require(Shared.ConfigUpgrades)
 local Remotes          = require(Shared.Remotes)
 
 local ShopManager = {}
@@ -18,25 +18,28 @@ function ShopManager.getCost(upgradeId: string): number
 	local def = UpgradeDefs.defs[upgradeId]
 	if not def then return math.huge end
 	local level = _PlayerState.getUpgradeLevel(upgradeId)
-	return math.floor(def.baseCost * (1.5 ^ level))
+	local next = def[level + 1]
+	if not next then return math.huge end
+	return next.cost
 end
 
+-- Set the Config key to the level's value, then run any side effects
 local function _applyUpgrade(upgradeId: string, newLevel: number)
+	local def   = UpgradeDefs.defs[upgradeId]
+	local entry = def[newLevel]
+	if not entry then return end
+
+	local oldValue  = Config[def.configKey]
+	Config[def.configKey] = entry.value
+
+	-- Side effects that live managers need beyond the Config write
+	local delta = entry.value - oldValue
 	if upgradeId == "MORE_COINS" then
-		_CoinManager.spawnExtraCoins(2)
-
-	elseif upgradeId == "FASTER_MEEPLE" then
-		Config.MEEPLE_SPEED = Config.MEEPLE_SPEED * 1.2
-
+		_CoinManager.spawnExtraCoins(delta)
 	elseif upgradeId == "MEEPLE_STAMINA" then
-		Config.MEEPLE_MAX_ENERGY = Config.MEEPLE_MAX_ENERGY + 5
-		_MeepleManager.updateMaxEnergy(Config.MEEPLE_MAX_ENERGY)
-
+		_MeepleManager.updateMaxEnergy(entry.value)
 	elseif upgradeId == "MORE_MEEPLE" then
-		_MeepleManager.spawnExtra(1)
-
-	elseif upgradeId == "LUCKY_FLIP" then
-		Config.FLIP_WIN_CHANCE = math.min(Config.FLIP_WIN_CHANCE + 0.05, 0.95)
+		_MeepleManager.spawnExtra(delta)
 	end
 end
 
@@ -46,7 +49,7 @@ function ShopManager.purchaseUpgrade(upgradeId: string): boolean
 	if not def then return false end
 
 	local level = _PlayerState.getUpgradeLevel(upgradeId)
-	if level >= def.maxLevel then return false end
+	if level >= #def then return false end
 
 	local cost = ShopManager.getCost(upgradeId)
 	if not _PlayerState.spendMoney(cost) then return false end

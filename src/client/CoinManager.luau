@@ -33,6 +33,24 @@ local COIN_HEIGHT   = 0.25  -- studs (thin cylinder)
 local COIN_COLOR_H  = Color3.fromRGB(212, 175, 55)   -- gold
 local COIN_COLOR_T  = Color3.fromRGB(160, 130, 40)   -- slightly darker
 
+local FACE_TEXT_COLOR = Color3.fromRGB(90, 60, 10)  -- dark brown, readable against gold
+
+local function _addFaceLabel(part: BasePart, face: Enum.NormalId, text: string)
+	local gui = Instance.new("SurfaceGui")
+	gui.Name  = text .. "Face"
+	gui.Face  = face
+	gui.Parent = part
+
+	local label = Instance.new("TextLabel")
+	label.Size                   = UDim2.fromScale(1, 1)
+	label.BackgroundTransparency = 1
+	label.Text                   = text
+	label.TextColor3             = FACE_TEXT_COLOR
+	label.TextScaled             = true
+	label.Font                   = Enum.Font.GothamBold
+	label.Parent                 = gui
+end
+
 local function _randomBoardPosition(): Vector3
 	local half = Config.BOARD_SIZE.X / 2 - COIN_RADIUS - 0.5
 	local x = math.random(-half * 100, half * 100) / 100
@@ -57,6 +75,11 @@ local function _spawnCoin(): CoinState
 	part.Material   = Enum.Material.SmoothPlastic
 	part.CastShadow = false
 	part.Parent     = Workspace
+
+	-- Heads label on the +X face (points up after BASE_FLAT rotation)
+	_addFaceLabel(part, Enum.NormalId.Right, "H")
+	-- Tails label on the -X face (points up when coin is flipped over)
+	_addFaceLabel(part, Enum.NormalId.Left,  "T")
 
 	CollectionService:AddTag(part, "Coin")
 

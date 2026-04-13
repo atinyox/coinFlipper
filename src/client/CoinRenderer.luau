@@ -63,12 +63,17 @@ function CoinRenderer.playFlip(coin, isHeads: boolean)
 	local drift = Vector3.new(math.cos(angle2D) * driftMag, 0, math.sin(angle2D) * driftMag)
 	local landPos = originPos + drift
 
-	-- Final resting CFrame: drifted position, flat on board
-	local finalCF = CFrame.new(landPos) * BASE_FLAT
-		* (isHeads and CFrame.identity or CFrame.Angles(0, math.rad(180), 0))
+	-- Final resting CFrame: drifted position, flat on board.
+	-- Heads: Right face (+X) points up.  Tails: extra π around world X flips the coin
+	-- so Left face (-X) points up, showing "T".
+	local tailsFlip = isHeads and 0 or math.pi
+	local finalCF = CFrame.new(landPos)
+		* CFrame.fromAxisAngle(Vector3.xAxis, tailsFlip)
+		* BASE_FLAT
 
-	-- Total tumble angle: FLIP_TURNS full rotations (always lands flat)
-	local totalSpin = FLIP_TURNS * 2 * math.pi
+	-- Total tumble: FLIP_TURNS full rotations + extra half-turn for tails so the
+	-- mid-air animation ends close to the final orientation (minimal snap).
+	local totalSpin = FLIP_TURNS * 2 * math.pi + tailsFlip
 
 	local elapsed = 0
 	local conn: RBXScriptConnection

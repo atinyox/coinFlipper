@@ -31,20 +31,23 @@ local HUD          = require(Client.HUD)
 
 -- ── Camera setup ──────────────────────────────────────────────────────────────
 local camera = workspace.CurrentCamera
-camera.CameraType = Enum.CameraType.Scriptable
 
-local function _updateCamera()
-	local angleRad   = math.rad(Config.CAMERA_ANGLE)  -- tilt from vertical
-	local height     = Config.CAMERA_HEIGHT
-	-- Offset: tilt backward along Z axis
-	local zOffset    = height * math.tan(angleRad)
-	local camPos     = Vector3.new(0, height, zOffset)
-	local lookTarget = Vector3.new(0, 0, 0)  -- board center
-	camera.CFrame    = CFrame.lookAt(camPos, lookTarget)
+if not Config.FREE_CAMERA then
+	camera.CameraType = Enum.CameraType.Scriptable
+
+	local function _updateCamera()
+		local angleRad   = math.rad(Config.CAMERA_ANGLE)  -- tilt from vertical
+		local height     = Config.CAMERA_HEIGHT
+		-- Offset: tilt backward along Z axis
+		local zOffset    = height * math.tan(angleRad)
+		local camPos     = Vector3.new(0, height, zOffset)
+		local lookTarget = Vector3.new(0, 0, 0)  -- board center
+		camera.CFrame    = CFrame.lookAt(camPos, lookTarget)
+	end
+
+	RunService.RenderStepped:Connect(_updateCamera)
+	_updateCamera()
 end
-
-RunService.RenderStepped:Connect(_updateCamera)
-_updateCamera()
 
 -- ── Fetch player appearance without spawning a character ─────────────────────
 -- CharacterAutoLoads is false server-side, so no character ever spawns.

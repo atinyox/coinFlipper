@@ -103,9 +103,6 @@ function CoinRenderer.playFlip(coin, isHeads: boolean)
 
 			-- Snap to exact final orientation and position
 			part.CFrame = finalCF
-			part.Color  = isHeads
-				and Color3.fromRGB(212, 175, 55)  -- gold (heads)
-				or  Color3.fromRGB(160, 130, 40)  -- darker (tails)
 
 			if isHeads then
 				_makePopup(part, "+" .. tostring(Config.BASE_PAYOUT), Color3.fromRGB(80, 220, 80))

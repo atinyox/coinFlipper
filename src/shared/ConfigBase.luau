@@ -37,6 +37,9 @@ Config.ANIM_R15_REST      = "rbxassetid://507768133"  -- Sit (R15)
 Config.CAMERA_HEIGHT      = 25      -- studs above the board center
 Config.CAMERA_ANGLE       = 40      -- degrees from vertical (0 = straight down, 90 = horizontal)
 
+-- Debug
+Config.FREE_CAMERA        = false   -- set true to unlock camera for free-look (disables scripted cam)
+
 -- Persistence
 Config.SAVE_DEBOUNCE      = 30      -- minimum seconds between DataStore writes
 

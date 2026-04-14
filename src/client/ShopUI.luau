@@ -13,7 +13,7 @@ local _PlayerState  = nil
 local _ShopManager  = nil
 
 local _gui: ScreenGui      = nil
-local _cards: {[string]: {button: TextButton, costLabel: TextLabel}} = {}
+local _cards: {[string]: {button: TextButton, costLabel: TextLabel, levelLabel: TextLabel}} = {}
 
 local SIDEBAR_WIDTH  = 220
 local CARD_HEIGHT    = 70

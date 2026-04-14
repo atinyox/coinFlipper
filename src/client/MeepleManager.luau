@@ -11,8 +11,25 @@ local CollectionService   = game:GetService("CollectionService")
 local TweenService        = game:GetService("TweenService")
 local ReplicatedStorage   = game:GetService("ReplicatedStorage")
 
+local KeyframeSequenceProvider = game:GetService("KeyframeSequenceProvider")
+
 local Shared      = ReplicatedStorage:WaitForChild("Shared")
 local Config      = require(Shared.ConfigBase)
+
+-- Register KeyframeSequence assets stored in ReplicatedStorage and cache their content IDs
+local _animIds: {[string]: string} = {}
+local function _registerAnim(name: string)
+	local kfs = ReplicatedStorage:FindFirstChild(name)
+	if not kfs then return end
+	local ok, id = pcall(function()
+		return KeyframeSequenceProvider:RegisterKeyframeSequence(kfs)
+	end)
+	if ok then
+		_animIds[name] = id
+	else
+		warn("[MeepleManager] Failed to register " .. name .. ": " .. tostring(id))
+	end
+end
 
 local _noobDummyTemplate: Model? = ReplicatedStorage:FindFirstChild("Noob") :: Model?
 
@@ -70,8 +87,8 @@ local function _loadAnimationsAsync(humanoid: Humanoid, meeple: MeepleState, isR
 		end
 
 		local walkId = isR15 and Config.ANIM_R15_WALK or Config.ANIM_R6_WALK
-		local flipId = isR15 and Config.ANIM_R15_FLIP or Config.ANIM_R6_FLIP
-		local restId = isR15 and Config.ANIM_R15_REST or Config.ANIM_R6_REST
+		local flipId = _animIds[if isR15 then "CoinFlipR15" else "CoinFlipR6"]
+		local restId = _animIds[if isR15 then "MeepleRestR15" else "MeepleRestR6"]
 
 		meeple.walkTrack = load(walkId, true)
 		meeple.flipTrack = load(flipId, false)
@@ -531,6 +548,12 @@ end
 function MeepleManager.init(coinManager, playerState, playerCharacter: Model?)
 	_CoinManager = coinManager
 	_PlayerState = playerState
+
+	-- Register KeyframeSequence animations from ReplicatedStorage
+	_registerAnim("CoinFlipR6")
+	_registerAnim("CoinFlipR15")
+	_registerAnim("MeepleRestR6")
+	_registerAnim("MeepleRestR15")
 
 	-- First meeple: use the player's character model if provided
 	if playerCharacter then

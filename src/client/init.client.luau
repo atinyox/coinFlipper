@@ -100,19 +100,23 @@ HUD.init(PlayerState)
 local UpgradeDefs = require(Shared.ConfigUpgrades)
 for _, id in UpgradeDefs.order do
 	local level = PlayerState.getUpgradeLevel(id)
-	for _ = 1, level do
-		-- Re-apply without spending money or saving
-		if id == "MORE_COINS" then
-			CoinManager.spawnExtraCoins(2)
-		elseif id == "FASTER_MEEPLE" then
-			Config.MEEPLE_SPEED = Config.MEEPLE_SPEED * 1.2
-		elseif id == "MEEPLE_STAMINA" then
-			Config.MEEPLE_MAX_ENERGY = Config.MEEPLE_MAX_ENERGY + 5
-			MeepleManager.updateMaxEnergy(Config.MEEPLE_MAX_ENERGY)
-		elseif id == "MORE_MEEPLE" then
-			MeepleManager.spawnExtra(1)
-		elseif id == "LUCKY_FLIP" then
-			Config.FLIP_WIN_CHANCE = math.min(Config.FLIP_WIN_CHANCE + 0.05, 0.95)
+	if level > 0 then
+		local def   = UpgradeDefs.defs[id]
+		local entry = def[level]
+		if entry then
+			-- Set the config key to the saved level's absolute value
+			local oldValue = Config[def.configKey]
+			Config[def.configKey] = entry.value
+
+			-- Side effects that managers need beyond the Config write
+			local delta = entry.value - oldValue
+			if id == "MORE_COINS" then
+				CoinManager.spawnExtraCoins(delta)
+			elseif id == "MEEPLE_STAMINA" then
+				MeepleManager.updateMaxEnergy(entry.value)
+			elseif id == "MORE_MEEPLE" then
+				MeepleManager.spawnExtra(delta)
+			end
 		end
 	end
 end

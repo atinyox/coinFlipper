@@ -34,7 +34,7 @@ Change this value and re-serve to see the effect without code changes.
 ## Meeple System
 - Default model: `ReplicatedStorage.Noob` (cloned at spawn). Falls back to plain Part if missing.
 - FSM states: IDLE → MOVING → FLIPPING → TIRED → (auto-wake or click) → IDLE
-- Animations loaded asynchronously via `_loadAnimationsAsync` (walk/flip/rest tracks). Animator is created manually for cloned models since Roblox only auto-creates it for player characters.
+- Animations stored as KeyframeSequence instances in ReplicatedStorage (`CoinFlipR6`, `CoinFlipR15`, `MeepleRestR6`, `MeepleRestR15`). Registered at init via `KeyframeSequenceProvider`, loaded asynchronously in `_loadAnimationsAsync`. Animator is created manually for cloned models since Roblox only auto-creates it for player characters.
 - `MEEPLE_FLIP_PAUSE` controls idle time between flips. `MEEPLE_REST_DURATION` controls auto-wake delay when tired.
 
 ## Coin Flip Animation

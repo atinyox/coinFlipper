@@ -79,7 +79,7 @@ local UpgradeOrder: {string} = {
 	"FASTER_MEEPLE",
 	"MEEPLE_STAMINA",
 	"MORE_MEEPLE",
-	"MEEPLE_FLIP_SPEED",
+	"MEEPLE_FLIP_PAUSE",
 	"LUCKY_FLIP",
 }
 

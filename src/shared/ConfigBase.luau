@@ -25,17 +25,13 @@ Config.MEEPLE_FLIP_PAUSE    = 3  -- seconds a meeple idles after flipping before
 Config.FLIP_DURATION      = 0.9    -- seconds for the full coin arc animation
 Config.FLIP_DRIFT         = 2.2   -- max studs the coin drifts from its start on landing
 
--- Meeple animation IDs — R6 defaults (Noob is R6)
+-- Meeple walk animation IDs (flip/rest are KeyframeSequences in ReplicatedStorage)
 Config.ANIM_R6_WALK       = "rbxassetid://180426354"
-Config.ANIM_R6_FLIP       = "rbxassetid://125750702"  -- Jump: energetic pop matching coin toss
-Config.ANIM_R6_REST       = "rbxassetid://178130996"  -- Sit: meeple sits when tired
 Config.ANIM_R15_WALK      = "rbxassetid://507777826"
-Config.ANIM_R15_FLIP      = "rbxassetid://507765644"  -- Jump (R15)
-Config.ANIM_R15_REST      = "rbxassetid://507768133"  -- Sit (R15)
 
 -- Camera
-Config.CAMERA_HEIGHT      = 25      -- studs above the board center
-Config.CAMERA_ANGLE       = 40      -- degrees from vertical (0 = straight down, 90 = horizontal)
+Config.CAMERA_HEIGHT      = 35      -- studs above the board center
+Config.CAMERA_ANGLE       = 30      -- degrees from vertical (0 = straight down, 90 = horizontal)
 
 -- Debug
 Config.FREE_CAMERA        = false   -- set true to unlock camera for free-look (disables scripted cam)

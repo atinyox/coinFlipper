@@ -23,7 +23,7 @@ Config.MEEPLE_FLIP_PAUSE    = 3  -- seconds a meeple idles after flipping before
 
 -- Coin flip animation (shared by CoinRenderer and MeepleManager)
 Config.FLIP_DURATION      = 0.9    -- seconds for the full coin arc animation
-Config.FLIP_DRIFT         = 2.2   -- max studs the coin drifts from its start on landing
+Config.FLIP_DRIFT         = 4.4   -- max studs the coin drifts from its start on landing
 
 -- Meeple walk animation IDs (flip/rest are KeyframeSequences in ReplicatedStorage)
 Config.ANIM_R6_WALK       = "rbxassetid://180426354"

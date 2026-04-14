@@ -11,7 +11,7 @@ local Config = require(Shared.ConfigBase)
 
 local CoinRenderer = {}
 
-local FLIP_HEIGHT   = 4.5           -- studs the coin rises at peak
+local FLIP_HEIGHT   = 9             -- studs the coin rises at peak
 local FLIP_TURNS    = 3             -- full 360° tumbles while airborne
 local FLIP_DURATION = Config.FLIP_DURATION
 local FLIP_DRIFT    = Config.FLIP_DRIFT

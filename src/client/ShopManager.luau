@@ -29,16 +29,16 @@ local function _applyUpgrade(upgradeId: string, newLevel: number)
 	local entry = def[newLevel]
 	if not entry then return end
 
-	local oldValue  = Config[def.configKey]
-	Config[def.configKey] = entry.value
+	local oldValue  = Config[upgradeId]
+	Config[upgradeId] = entry.value
 
 	-- Side effects that live managers need beyond the Config write
 	local delta = entry.value - oldValue
-	if upgradeId == "MORE_COINS" then
+	if upgradeId == "INITIAL_COIN_COUNT" then
 		_CoinManager.spawnExtraCoins(delta)
-	elseif upgradeId == "MEEPLE_STAMINA" then
+	elseif upgradeId == "MEEPLE_MAX_ENERGY" then
 		_MeepleManager.updateMaxEnergy(entry.value)
-	elseif upgradeId == "MORE_MEEPLE" then
+	elseif upgradeId == "MEEPLE_COUNT" then
 		_MeepleManager.spawnExtra(delta)
 	end
 end

@@ -47,6 +47,7 @@ export type MeepleState = {
 	maxEnergy: number,
 	state:     string,          -- "IDLE" | "MOVING" | "FLIPPING" | "TIRED"
 	targetCoinId:    number?,
+	lastFlippedCoinId: number?,       -- avoid re-flipping the same coin twice in a row
 	isFriend:        boolean,
 	walkTrack:       AnimationTrack?,
 	flipTrack:       AnimationTrack?,
@@ -185,8 +186,9 @@ local function _spawnMeeple(name: string, isFriend: boolean): MeepleState
 			energy         = Config.MEEPLE_MAX_ENERGY,
 			maxEnergy      = Config.MEEPLE_MAX_ENERGY,
 			state          = "IDLE",
-			targetCoinId   = nil,
-			isFriend       = isFriend,
+			targetCoinId       = nil,
+			lastFlippedCoinId  = nil,
+			isFriend           = isFriend,
 			walkTrack      = nil,
 			flipTrack      = nil,
 			restTrack      = nil,
@@ -230,12 +232,13 @@ local function _spawnMeeple(name: string, isFriend: boolean): MeepleState
 		energy          = Config.MEEPLE_MAX_ENERGY,
 		maxEnergy       = Config.MEEPLE_MAX_ENERGY,
 		state           = "IDLE",
-		targetCoinId    = nil,
-		isFriend        = isFriend,
-		walkTrack       = nil,
-		flipTrack       = nil,
-		restTrack       = nil,
-		nextTargetTime  = 0,
+		targetCoinId       = nil,
+		lastFlippedCoinId  = nil,
+		isFriend           = isFriend,
+		walkTrack          = nil,
+		flipTrack          = nil,
+		restTrack          = nil,
+		nextTargetTime     = 0,
 	}
 	_meeples[id] = meeple
 	return meeple
@@ -304,12 +307,13 @@ local function _spawnCharacterMeeple(name: string, characterModel: Model): Meepl
 		energy         = Config.MEEPLE_MAX_ENERGY,
 		maxEnergy      = Config.MEEPLE_MAX_ENERGY,
 		state          = "IDLE",
-		targetCoinId   = nil,
-		isFriend       = false,
-		walkTrack      = nil,
-		flipTrack      = nil,
-		restTrack      = nil,
-		nextTargetTime = 0,
+		targetCoinId       = nil,
+		lastFlippedCoinId  = nil,
+		isFriend           = false,
+		walkTrack          = nil,
+		flipTrack          = nil,
+		restTrack          = nil,
+		nextTargetTime     = 0,
 	}
 	_meeples[id] = meeple
 
@@ -401,7 +405,7 @@ function MeepleManager.getMeepleByPart(part: BasePart): MeepleState?
 	return nil
 end
 
--- Called by ShopManager when MORE_MEEPLE or MEEPLE_STAMINA is upgraded
+-- Called by ShopManager when MEEPLE_COUNT or MEEPLE_MAX_ENERGY is upgraded
 function MeepleManager.spawnExtra(count: number)
 	for _ = 1, count do
 		_spawnMeeple("Meeple", false)
@@ -427,9 +431,10 @@ local function _tick(dt: number)
 			local available = _CoinManager.getAvailableCoins()
 			if #available == 0 then continue end
 
-			-- Pick nearest available coin
+			-- Pick nearest available coin, avoiding the last flipped coin unless it's the only option
 			local nearest, nearestDist = nil, math.huge
 			for _, coin in available do
+				if coin.id == meeple.lastFlippedCoinId and #available > 1 then continue end
 				local dist = (coin.part.Position - meeple.part.Position).Magnitude
 				if dist < nearestDist then
 					nearest     = coin
@@ -485,11 +490,12 @@ local function _tick(dt: number)
 			local speed = Config.MEEPLE_SPEED
 			local step  = math.min(speed * dt, dist)
 
-			if dist <= 1.2 then
-				-- Arrived — enter FLIPPING state for the coin animation duration
+			if dist <= 2.5 then
+				-- Arrived — stop slightly outside the coin and flip
 				local coinId = meeple.targetCoinId
-				meeple.state        = "FLIPPING"
-				meeple.targetCoinId = nil
+				meeple.state            = "FLIPPING"
+				meeple.targetCoinId     = nil
+				meeple.lastFlippedCoinId = coinId
 				meeple.nextTargetTime = tick() + Config.MEEPLE_FLIP_PAUSE
 
 				-- Stop walking, play flip animation

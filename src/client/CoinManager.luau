@@ -131,7 +131,7 @@ function CoinManager.flipCoin(coinId: number): boolean
 	return true
 end
 
--- Called by ShopManager when MORE_COINS upgrade is purchased
+-- Called by ShopManager when INITIAL_COIN_COUNT upgrade is purchased
 function CoinManager.spawnExtraCoins(count: number)
 	for _ = 1, count do
 		_spawnCoin()

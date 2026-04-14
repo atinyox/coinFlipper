@@ -49,7 +49,7 @@ Change this value and re-serve to see the effect without code changes.
 - `export type` for public Luau types
 
 ## Adding Upgrades
-1. Add a table to `shared/ConfigUpgrades.luau` with `name`, `desc`, `configKey`, and per-level `{cost, value}` entries
-2. Add the upgrade id to the `UpgradeOrder` array for UI placement
+1. Add a table to `shared/ConfigUpgrades.luau` keyed by its matching `ConfigBase` key name, with `name`, `desc`, and per-level `{cost, value}` entries
+2. Add the upgrade key to the `UpgradeOrder` array for UI placement
 3. If the upgrade needs side effects beyond setting Config (e.g. spawning coins/meeple), add a handler in `client/ShopManager.luau` (`_applyUpgrade`)
 4. `ShopUI` picks up new upgrades automatically from the order list

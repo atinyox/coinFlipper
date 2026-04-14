@@ -105,16 +105,16 @@ for _, id in UpgradeDefs.order do
 		local entry = def[level]
 		if entry then
 			-- Set the config key to the saved level's absolute value
-			local oldValue = Config[def.configKey]
-			Config[def.configKey] = entry.value
+			local oldValue = Config[id]
+			Config[id] = entry.value
 
 			-- Side effects that managers need beyond the Config write
 			local delta = entry.value - oldValue
-			if id == "MORE_COINS" then
+			if id == "INITIAL_COIN_COUNT" then
 				CoinManager.spawnExtraCoins(delta)
-			elseif id == "MEEPLE_STAMINA" then
+			elseif id == "MEEPLE_MAX_ENERGY" then
 				MeepleManager.updateMaxEnergy(entry.value)
-			elseif id == "MORE_MEEPLE" then
+			elseif id == "MEEPLE_COUNT" then
 				MeepleManager.spawnExtra(delta)
 			end
 		end
